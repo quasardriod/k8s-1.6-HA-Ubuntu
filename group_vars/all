@@ -1,0 +1,10 @@
+---
+# vars for Kubernates Cluster
+
+kube_master_ip: 192.168.2.111
+kube_node1_ip: 192.168.2.112
+kube_node2_ip: 192.168.2.113
+
+kube_master_hostname: kube-master
+kube_node1_hostname: kube-node1
+kube_node2_hostname: kube_node2

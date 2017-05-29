@@ -1,0 +1,7 @@
+---
+# Join slave nodes to master
+- name: Run fetched token as script in slaves
+  script: /tmp/token.sh
+  ignore_errors: flase
+  tags:
+    - join-slaves

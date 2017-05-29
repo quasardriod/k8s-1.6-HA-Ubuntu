@@ -1,0 +1,11 @@
+---
+
+- name: Copy nginx ClusterIP service template to master node
+  copy:
+    src: clusterip-svc.yaml
+    dest: /tmp/
+    owner: "{{ansible_ssh_user}}"
+    group: "{{}}"
+
+- name: Create ClusterIP service type
+  command: kubectl --kubeconfig ./admin.conf create -f /tmp/clusterip-svc.yaml

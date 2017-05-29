@@ -1,0 +1,8 @@
+---
+
+- name: Delete created files
+  command: rm -rf /tmp/"{{item}}"
+  with_items:
+    - key_info
+    - token.sh
+    - kube-user-env.sh

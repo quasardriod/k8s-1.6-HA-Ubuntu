@@ -1,0 +1,67 @@
+---
+# Initializing master
+
+- name: Initializing master
+  shell: kubeadm init --skip-preflight-checks > /tmp/key_info
+  register: master_init
+  ignore_errors: flase
+  tags:
+    - master_node_init
+
+- name: Check master Initialization details
+  command: cat /tmp/key_info
+  register: key_info
+- debug: var=key_info.stdout
+
+- name: Storing token
+  shell: cat /tmp/key_info |grep "kubeadm join --token" > /tmp/token.sh
+  tags:
+    - store_token
+- name: Show stored token
+  shell: cat /tmp/token.sh
+  register: show_token
+- debug:
+    var: show_token.stdout
+
+- name: Add "--skip-preflight-checks" to token
+  shell: sed -i 's/:6443/:6443 --skip-preflight-checks/' /tmp/token.sh
+  tags:
+    - set-token
+
+- name: Fetch token
+  fetch:
+    src: /tmp/token.sh
+    dest: /tmp/
+    flat: yes
+  register: fetch_token
+  tags:
+    - fetch_registration_token
+
+# - name: Copy Kube environment setup file for non-root user
+#  template:
+#    src: kube-user-env.j2
+#    dest: /tmp/kube-user-env.sh
+#    backup: no
+#    owner: {{ansible_ssh_user}}
+#    group: {{ansible_ssh_user}}
+#    mode: 0755
+#  tags:
+#    - copy-env-file
+
+#- name: Configure Kube environment for non-root user
+#  shell: sh /tmp/kube-user-env.sh
+#  tags:
+#    - setup-env
+# Installing pod network add-on in master to communicate pods with each other
+
+#- name: Installing a pod network
+#  command: kubectl apply -f https://git.io/weave-kube-1.6
+#  ignore_errors: flase
+#  register: intall_pod_net
+#  tags: install_podnet
+
+# - name: Check pods status
+#  shell: kubectl get pods --all-namespaces
+#  register: pod_dns_status
+
+#- debug: var=pod_dns_status.stdout
