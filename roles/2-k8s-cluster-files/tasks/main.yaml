@@ -1,0 +1,8 @@
+---
+
+- name: Copy etcd.yaml to all master nodes
+  template:
+    src: etcd.j2
+    dest: /etc/kubernetes/manifests/etcd.yaml
+    backup: no
+    mode: 0755
